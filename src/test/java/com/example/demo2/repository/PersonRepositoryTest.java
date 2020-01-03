@@ -25,7 +25,7 @@ class PersonRepositoryTest {
 
         personRepository.save(person1);
 
-//        System.out.println(personRepository.findAll());
+        System.out.println(personRepository.findAll());
 
         List<Person> people = personRepository.findAll();
 
