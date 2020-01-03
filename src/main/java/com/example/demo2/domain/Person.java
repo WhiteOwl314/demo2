@@ -10,13 +10,17 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@EqualsAndHashCode
+@RequiredArgsConstructor
 public class Person {
 
     @Id
     @GeneratedValue
     private Long id;
 
+    @NonNull
     private String name;
+    @NonNull
     private int age;
 
     private String hobby;
