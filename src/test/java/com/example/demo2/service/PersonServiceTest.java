@@ -35,8 +35,8 @@ class PersonServiceTest {
         givenBlock("martin");
     }
 
-    private void givenBlock(String name) {
-        blockRepository.save(new Block(name));
+    private Block givenBlock(String name) {
+        return blockRepository.save(new Block(name));
     }
 
     private void givenPeaple() {
@@ -48,7 +48,7 @@ class PersonServiceTest {
 
     private void givenBlockPerson(String name, int age) {
         Person blockPerson = new Person(name, age);
-        blockPerson.setBlock(new Block(name));
+        blockPerson.setBlock(givenBlock(name));
         personRepository.save(blockPerson);
     }
 
