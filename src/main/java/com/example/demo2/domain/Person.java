@@ -10,7 +10,6 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@EqualsAndHashCode
 @RequiredArgsConstructor
 public class Person {
 
