@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -24,6 +25,10 @@ class PersonRepositoryTest {
 
         personRepository.save(person1);
 
-        System.out.println(personRepository.findAll());
+//        System.out.println(personRepository.findAll());
+
+        List<Person> people = personRepository.findAll();
+
+        assertThat(people.get(0).getAddress()).isEqualTo("Test");
     }
 }
