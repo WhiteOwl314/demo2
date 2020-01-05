@@ -46,11 +46,14 @@ class PersonServiceTest {
 
         personRepository.save(person);
 
-        personRepository.findAll().forEach(System.out::println);
+        //orpan테스트
+        person.setBlock(null);
+        personRepository.save(person);
 
-        personRepository.delete(person);
         personRepository.findAll().forEach(System.out::println);
         blockRepository.findAll().forEach(System.out::println);
+
+
 
     }
 
