@@ -28,6 +28,6 @@ public class Person {
     @ToString.Exclude
     private String phoneNumber;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Block block;
 }
