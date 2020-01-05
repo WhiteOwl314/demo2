@@ -2,10 +2,7 @@ package com.example.demo2.domain;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
@@ -31,6 +28,6 @@ public class Person {
     @ToString.Exclude
     private String phoneNumber;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     private Block block;
 }

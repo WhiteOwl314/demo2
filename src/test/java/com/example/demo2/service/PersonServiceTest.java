@@ -48,7 +48,7 @@ class PersonServiceTest {
 
     private void givenBlockPerson(String name, int age) {
         Person blockPerson = new Person(name, age);
-        blockPerson.setBlock(givenBlock(name));
+        blockPerson.setBlock(new Block(name));
         personRepository.save(blockPerson);
     }
 
