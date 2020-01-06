@@ -4,15 +4,12 @@ import com.example.demo2.domain.Block;
 import com.example.demo2.domain.Person;
 import com.example.demo2.repository.BlockRepository;
 import com.example.demo2.repository.PersonRepository;
-import lombok.ToString;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class PersonServiceTest {
@@ -25,7 +22,7 @@ class PersonServiceTest {
 
     @Test
     void getPeopleExcludeBlocks(){
-        givenPeaple();
+        givenPeople();
 
         List<Person> result = personService.getPeopelExcludeBlocks();
         result.forEach(System.out::println);
@@ -34,7 +31,7 @@ class PersonServiceTest {
     //person을 통해 block에 데이터를 set 할 수 있는지 테스트  -> set이 안됨
     @Test
     void cascadeTest(){
-        givenPeaple();
+        givenPeople();
 
         List<Person> result = personRepository.findAll();
 
@@ -52,13 +49,18 @@ class PersonServiceTest {
 
         personRepository.findAll().forEach(System.out::println);
         blockRepository.findAll().forEach(System.out::println);
+    }
 
+    @Test
+    void getPerson(){
+        givenPeople();
 
-
+        Person person = personService.getPerson((long)3);
+        System.out.println(person);
     }
 
 
-    private void givenPeaple() {
+    private void givenPeople() {
         givenPerson("martin",10);
         givenPerson("david",9);
         givenPerson("dannis",7);
