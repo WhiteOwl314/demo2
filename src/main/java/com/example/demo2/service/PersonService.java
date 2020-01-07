@@ -26,6 +26,12 @@ public class PersonService {
         return people.stream().filter(person -> person.getBlock() == null).collect(Collectors.toList());
     }
 
+    public List<Person> getPeopleByName(String name){
+        List<Person> people = personRepository.findAll();
+
+        return people.stream().filter(person -> person.getName().equals(name)).collect(Collectors.toList());
+    }
+
     @Transactional
     public Person getPerson(Long id){
         Person person = personRepository.findById(id).get();

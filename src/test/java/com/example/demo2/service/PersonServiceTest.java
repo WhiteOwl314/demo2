@@ -59,6 +59,15 @@ class PersonServiceTest {
         System.out.println(person);
     }
 
+    @Test
+    void getPeopleByName(){
+        givenPeople();
+
+        List<Person> result = personService.getPeopleByName("martin");
+
+        result.forEach(System.out::println);
+    }
+
 
     private void givenPeople() {
         givenPerson("martin",10);
