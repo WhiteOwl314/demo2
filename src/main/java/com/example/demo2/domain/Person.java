@@ -1,8 +1,10 @@
 package com.example.demo2.domain;
 
+import com.example.demo2.dto.Birthday;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import java.time.LocalDate;
 
 @Entity
@@ -24,7 +26,9 @@ public class Person {
     private String hobby;
     private String address;
 
-    private LocalDate birthday;
+    @Valid
+    @Embedded
+    private Birthday birthday;
 
     private String job;
 

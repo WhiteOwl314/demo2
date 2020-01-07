@@ -1,6 +1,7 @@
 package com.example.demo2.repository;
 
 import com.example.demo2.domain.Person;
+import com.example.demo2.dto.Birthday;
 import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ class PersonRepositoryTest {
 
         Person person1 = new Person("martin",10);
 
+        person1.setBirthday(new Birthday(LocalDate.of(1994,9,14)));
 
         person1.setAddress("Test");
 
@@ -34,7 +36,7 @@ class PersonRepositoryTest {
 
         List<Person> people = personRepository.findAll();
 
-        assertThat(people.get(0).getAddress()).isEqualTo("Test");
+        assertThat(person1.getAddress()).isEqualTo("Test");
     }
 
     @Test
@@ -62,15 +64,19 @@ class PersonRepositoryTest {
         givenPerson("sophia",7, LocalDate.of(1994,6,30));
         givenPerson("benny",6, LocalDate.of(1995,8,30));
 
-        List<Person> result = personRepository.findByBirthdayBetween(LocalDate.of(1991,8,1),LocalDate.of(1991,8,31));
+        List<Person> result = personRepository.findByMonthOfBirthday(13);
 
         result.forEach(System.out::println);
+    }
+
+    private void givenPerson(String name, int age){
+        givenPerson(name, age , null);
     }
 
     private void givenPerson(String name, int age, LocalDate birthday) {
 
         Person person = new Person(name, age);
-        person.setBirthday(birthday);
+        person.setBirthday(new Birthday(birthday));
 
         personRepository.save(person);
     }
