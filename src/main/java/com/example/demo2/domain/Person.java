@@ -3,6 +3,7 @@ package com.example.demo2.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
@@ -22,7 +23,9 @@ public class Person {
 
     private String hobby;
     private String address;
-    private String birthday;
+
+    private LocalDate birthday;
+
     private String job;
 
     @ToString.Exclude
