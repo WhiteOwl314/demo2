@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
 class PersonServiceTest {
     @Autowired
@@ -22,68 +24,20 @@ class PersonServiceTest {
 
     @Test
     void getPeopleExcludeBlocks(){
-        givenPeople();
-
         List<Person> result = personService.getPeopelExcludeBlocks();
         result.forEach(System.out::println);
     }
 
-    //person을 통해 block에 데이터를 set 할 수 있는지 테스트  -> set이 안됨
-    @Test
-    void cascadeTest(){
-        givenPeople();
-
-        List<Person> result = personRepository.findAll();
-
-        result.forEach(System.out::println);
-
-        Person person = result.get(3);
-        person.getBlock().setStartDate(LocalDate.now());
-        person.getBlock().setEndDate(LocalDate.now());
-
-        personRepository.save(person);
-
-        //orpan테스트
-        person.setBlock(null);
-        personRepository.save(person);
-
-        personRepository.findAll().forEach(System.out::println);
-        blockRepository.findAll().forEach(System.out::println);
-    }
-
     @Test
     void getPerson(){
-        givenPeople();
-
         Person person = personService.getPerson((long)3);
-        System.out.println(person);
+        assertThat(person.getName()).isEqualTo("dennis");
     }
 
     @Test
     void getPeopleByName(){
-        givenPeople();
-
         List<Person> result = personService.getPeopleByName("martin");
 
         result.forEach(System.out::println);
     }
-
-
-    private void givenPeople() {
-        givenPerson("martin",10);
-        givenPerson("david",9);
-        givenPerson("dannis",7);
-        givenBlockPerson("martin",11);
-    }
-
-    private void givenBlockPerson(String name, int age) {
-        Person blockPerson = new Person(name, age);
-        blockPerson.setBlock(new Block(name));
-        personRepository.save(blockPerson);
-    }
-
-    private void givenPerson(String name, int age) {
-        personRepository.save(new Person(name,age));
-    }
-
 }

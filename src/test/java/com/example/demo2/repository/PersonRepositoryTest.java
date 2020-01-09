@@ -40,44 +40,12 @@ class PersonRepositoryTest {
     }
 
     @Test
-    void hashCodeAndEquals(){
-        Person person1 = new Person("martin",10);
-        Person person2 = new Person("martin", 10);
-
-        System.out.println(person1.equals(person2));
-
-        System.out.println(person1.hashCode());
-        System.out.println(person2.hashCode());
-
-        Map<Person, Integer> map = new HashMap<>();
-        map.put(person1, person1.getAge());
-
-        System.out.println(map);
-        System.out.println(map.get(person2));
-    }
-
-    @Test
     void findByBirthdayBetween(){
-        givenPerson("martin",10, LocalDate.of(1991,8,15));
-        givenPerson("david",9, LocalDate.of(1992, 7, 10));
-        givenPerson("dennis",8, LocalDate.of(1993,1,5));
-        givenPerson("sophia",7, LocalDate.of(1994,6,30));
-        givenPerson("benny",6, LocalDate.of(1995,8,30));
+        List<Person> result = personRepository.findByMonthOfBirthday(8);
 
-        List<Person> result = personRepository.findByMonthOfBirthday(13);
-
-        result.forEach(System.out::println);
+        assertThat(result.size()).isEqualTo(2);
+        assertThat(result.get(0).getName()).isEqualTo("martin");
+        assertThat(result.get(1).getName()).isEqualTo("sophia");
     }
 
-    private void givenPerson(String name, int age){
-        givenPerson(name, age , null);
-    }
-
-    private void givenPerson(String name, int age, LocalDate birthday) {
-
-        Person person = new Person(name, age);
-        person.setBirthday(new Birthday(birthday));
-
-        personRepository.save(person);
-    }
 }
