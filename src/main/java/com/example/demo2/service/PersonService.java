@@ -30,9 +30,8 @@ public class PersonService {
 
     @Transactional
     public Person getPerson(Long id){
-        Person person = personRepository.findById(id).get();
+        Person person = personRepository.findById(id).orElse(null);
 
-        System.out.println("Person: " + person);
         log.info("person: {}",person );
 
         return person;
