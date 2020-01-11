@@ -27,7 +27,7 @@ class PersonControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/person/1"))
-                .andExpect(print())
+                .andDo(print())
                 .andExpect(status().isOk());
     }
 }
