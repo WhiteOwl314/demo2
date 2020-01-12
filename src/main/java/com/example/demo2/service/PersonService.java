@@ -47,23 +47,15 @@ public class PersonService {
     @Transactional
     public void modify(Long id, PersonDto personDto) {
 
-        Person personAtDb = personRepository.findById(id).orElseThrow(() -> new RuntimeException("아이디가 존재하지 않습니다."));
+        Person person = personRepository.findById(id).orElseThrow(() -> new RuntimeException("아이디가 존재하지 않습니다."));
 
-        if(!personAtDb.getName().equals(personDto.getName())){
+        if(!person.getName().equals(personDto.getName())){
             throw new RuntimeException("이름이 다릅니다.");
         }
-        personAtDb.setName(personDto.getName());
 
-        if(personDto.getBirthday() != null){
-            personAtDb.setBirthday((new Birthday(personDto.getBirthday())));
-        }
-        personAtDb.setAddress(personDto.getAddress());
-        personAtDb.setAge(personDto.getAge());
-        personAtDb.setHobby(personDto.getHobby());
-        personAtDb.setJob(personDto.getJob());
-        personAtDb.setPhoneNumber(personDto.getPhoneNumber());
+        person.set(personDto);
 
-        personRepository.save(personAtDb);
+        personRepository.save(person);
 
     }
 }
