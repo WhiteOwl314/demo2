@@ -39,4 +39,10 @@ public class PersonController {
 
         log.info("person -> {}", personRepository.findAll());
     }
+
+    @PatchMapping("/{id}")
+    public void modifyPerson(@PathVariable Long id, String name){
+        personService.modify(id,name);
+        log.info("person -> {}", personRepository.findAll());
+    }
 }

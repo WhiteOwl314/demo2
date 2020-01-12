@@ -58,4 +58,13 @@ public class PersonService {
         personRepository.save(person);
 
     }
+
+    @Transactional
+    public void modify(Long id, String name){
+        Person person = personRepository.findById(id).orElseThrow(() -> new RuntimeException("아이디가 존재하지 않습니다."));
+
+        person.setName(name);
+
+        personRepository.save(person);
+    }
 }
