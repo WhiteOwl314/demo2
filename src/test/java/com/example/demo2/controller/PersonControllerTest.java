@@ -74,4 +74,12 @@ class PersonControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void deletePerson() throws Exception{
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/api/person/1"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
 }
