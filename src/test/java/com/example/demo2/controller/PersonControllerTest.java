@@ -1,6 +1,9 @@
 package com.example.demo2.controller;
 
+import com.example.demo2.domain.dto.PersonDto;
 import com.example.demo2.repository.PersonRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +15,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -27,6 +33,8 @@ class PersonControllerTest {
     PersonController personController;
     @Autowired
     PersonRepository personRepository;
+    @Autowired
+    ObjectMapper objectMapper;
 
     private MockMvc mockMvc;
 
@@ -52,7 +60,6 @@ class PersonControllerTest {
                     .content(
                         "{\n" +
                                 "  \"name\":\"martin2\",\n" +
-                                "  \"age\": 20\n" +
                                 "}"
                     ))
                 .andDo(print())
@@ -78,9 +85,11 @@ class PersonControllerTest {
 
         mockMvc.perform(
                 MockMvcRequestBuilders.patch("/api/person/1")
-                .param("name","martin22"))
+                .param("name","martinModified"))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        assertThat(personRepository.findById(1L).get().getName()).isEqualTo("martinModified");
     }
 
     @Test
@@ -88,9 +97,25 @@ class PersonControllerTest {
         mockMvc.perform(
                 MockMvcRequestBuilders.delete("/api/person/1"))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string("true"));
+                .andExpect(status().isOk());
 
-        log.info("people deleted : {}", personRepository.findPeopleDeleted());
+        assertTrue(personRepository.findPeopleDeleted().stream().anyMatch(person -> person.getId().equals(1L)));
+
+
+    }
+
+    @Test
+    void checkJsonString() throws JsonProcessingException {
+        PersonDto dto = new PersonDto();
+        dto.setName("martin");
+        dto.setBirthday(LocalDate.now());
+        dto.setAddress("판교");
+
+        System.out.println(">>>" + toJasonString(dto));
+    }
+
+    private String toJasonString(PersonDto personDto) throws JsonProcessingException{
+
+        return objectMapper.writeValueAsString(personDto);
     }
 }
