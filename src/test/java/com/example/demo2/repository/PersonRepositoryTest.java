@@ -2,6 +2,7 @@ package com.example.demo2.repository;
 
 import com.example.demo2.domain.Person;
 import com.example.demo2.dto.Birthday;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
+@Slf4j
 class PersonRepositoryTest {
 
     @Autowired
@@ -26,7 +28,7 @@ class PersonRepositoryTest {
     @Test
     public void crud(){
 
-        Person person1 = new Person("martin",10);
+        Person person1 = new Person("martin");
 
         person1.setBirthday(new Birthday(LocalDate.of(1994,9,14)));
 
@@ -44,6 +46,8 @@ class PersonRepositoryTest {
     @Test
     void findByBirthdayBetween(){
         List<Person> result = personRepository.findByMonthOfBirthday(8);
+
+        log.info("person -> {}",personRepository.findAll());
 
         assertThat(result.size()).isEqualTo(2);
         assertThat(result.get(0).getName()).isEqualTo("martin");

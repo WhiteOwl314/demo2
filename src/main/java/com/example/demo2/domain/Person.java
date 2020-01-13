@@ -30,10 +30,6 @@ public class Person {
     @NotEmpty
     private String name;
 
-    @NonNull
-    @Min(1)
-    private int age;
-
     private String hobby;
     private String address;
 
@@ -54,9 +50,6 @@ public class Person {
     private Block block;
 
     public void set(PersonDto personDto){
-        if(personDto.getAge() != 0){
-            this.setAge(personDto.getAge());
-        }
         if(!StringUtils.isEmpty(personDto.getHobby())){
             this.setHobby(personDto.getHobby());
         }
@@ -69,5 +62,20 @@ public class Person {
         if(!StringUtils.isEmpty(personDto.getPhoneNumber())){
             this.setPhoneNumber(personDto.getPhoneNumber());
         }
+    }
+
+    public Integer getAge(){
+
+        if(this.birthday != null){
+
+            return LocalDate.now().getYear() - this.birthday.getYearOfBirthday() + 1;
+        } else{
+            return null;
+        }
+
+    }
+
+    public boolean isBirthdayToday(){
+        return LocalDate.now().equals(LocalDate.of(this.birthday.getYearOfBirthday(),this.birthday.getMonthOfBirthday(),this.birthday.getDayOfBirthday()));
     }
 }
