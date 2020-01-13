@@ -39,15 +39,10 @@ public class Person {
 
     private String job;
 
-    @ToString.Exclude
     private String phoneNumber;
 
     @ColumnDefault("0")
     private boolean deleted;
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private Block block;
 
     public void set(PersonDto personDto){
         if(!StringUtils.isEmpty(personDto.getHobby())){
@@ -61,6 +56,9 @@ public class Person {
         }
         if(!StringUtils.isEmpty(personDto.getPhoneNumber())){
             this.setPhoneNumber(personDto.getPhoneNumber());
+        }
+        if(personDto.getBirthday() != null){
+            this.setBirthday(Birthday.of(personDto.getBirthday()));
         }
     }
 

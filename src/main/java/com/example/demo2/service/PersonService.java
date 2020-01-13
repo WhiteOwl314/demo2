@@ -1,10 +1,7 @@
 package com.example.demo2.service;
 
-import com.example.demo2.domain.Block;
 import com.example.demo2.domain.Person;
 import com.example.demo2.domain.dto.PersonDto;
-import com.example.demo2.dto.Birthday;
-import com.example.demo2.repository.BlockRepository;
 import com.example.demo2.repository.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class PersonService {
     @Autowired
     private PersonRepository personRepository;
-    @Autowired
-    private BlockRepository blockRepository;
-
-    public List<Person> getPeopelExcludeBlocks(){
-        return personRepository.findByBlockIsNull();
-    }
 
     public List<Person> getPeopleByName(String name){
         return personRepository.findByName(name);
