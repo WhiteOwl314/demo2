@@ -23,8 +23,7 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @Slf4j
@@ -51,7 +50,16 @@ class PersonControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/person/1"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("martin"))
+                .andExpect(jsonPath("$.hobby").isEmpty())
+                .andExpect(jsonPath("$.address").isEmpty())
+                .andExpect(jsonPath("$.birthday.yearOfBirthday").value(1991))
+                .andExpect(jsonPath("$.birthday.monthOfBirthday").value(8))
+                .andExpect(jsonPath("$.birthday.dayOfBirthday").value(15))
+                .andExpect(jsonPath("$.phoneNumber").isEmpty())
+                .andExpect(jsonPath("$.deleted").value(false))
+                .andExpect(jsonPath("$.age").isNumber());
     }
 
     @Test
