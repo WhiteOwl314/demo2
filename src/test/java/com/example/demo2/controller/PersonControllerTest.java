@@ -1,6 +1,8 @@
 package com.example.demo2.controller;
 
+import com.example.demo2.domain.Person;
 import com.example.demo2.domain.dto.PersonDto;
+import com.example.demo2.dto.Birthday;
 import com.example.demo2.repository.PersonRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.NestedServletException;
 
 import java.time.LocalDate;
 
@@ -70,14 +73,36 @@ class PersonControllerTest {
     @Test
     void modifyPerson() throws Exception{
 
+        PersonDto dto = PersonDto.of("martin","programming","판교",LocalDate.now(),"programmer","010-3925-1533");
+
         mockMvc.perform(MockMvcRequestBuilders.put("/api/person/1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content("{\n" +
-                        "  \"name\":\"martin\",\n" +
-                        "  \"age\": 20\n" +
-                        "}"))
+                .content(toJasonString(dto)))
                 .andDo(print())
                 .andExpect(status().isOk());
+
+        Person result = personRepository.findById(1L).get();
+
+        assertAll(
+                () -> assertThat(result.getName()).isEqualTo("martin"),
+                () -> assertThat(result.getAddress()).isEqualTo("판교"),
+                () -> assertThat(result.getBirthday()).isEqualTo(Birthday.of(LocalDate.now())),
+                () -> assertThat(result.getHobby()).isEqualTo("programming"),
+                () -> assertThat(result.getJob()).isEqualTo("programmer")
+        );
+    }
+
+    @Test
+    void modifyPersonIfNameIsDifferent() throws Exception{
+        PersonDto dto = PersonDto.of("Seongju","programming","대전",LocalDate.now(),"programmer","010-3925-1533");
+
+        assertThrows(NestedServletException.class, () -> mockMvc.perform(
+                MockMvcRequestBuilders.put("/api/person/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(toJasonString(dto)))
+                .andDo(print())
+                .andExpect(status().isOk())
+        );
     }
 
     @Test
@@ -102,16 +127,6 @@ class PersonControllerTest {
         assertTrue(personRepository.findPeopleDeleted().stream().anyMatch(person -> person.getId().equals(1L)));
 
 
-    }
-
-    @Test
-    void checkJsonString() throws JsonProcessingException {
-        PersonDto dto = new PersonDto();
-        dto.setName("martin");
-        dto.setBirthday(LocalDate.now());
-        dto.setAddress("판교");
-
-        System.out.println(">>>" + toJasonString(dto));
     }
 
     private String toJasonString(PersonDto personDto) throws JsonProcessingException{
