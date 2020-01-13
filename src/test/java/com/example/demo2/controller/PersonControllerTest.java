@@ -11,7 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -37,12 +39,14 @@ class PersonControllerTest {
     PersonRepository personRepository;
     @Autowired
     ObjectMapper objectMapper;
+    @Autowired
+    private MappingJackson2HttpMessageConverter messageConverter;
 
     private MockMvc mockMvc;
 
     @BeforeEach
     void beforeEach(){
-        mockMvc = MockMvcBuilders.standaloneSetup(personController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(personController).setMessageConverters(messageConverter).build();
     }
 
     @Test
@@ -54,28 +58,34 @@ class PersonControllerTest {
                 .andExpect(jsonPath("$.name").value("martin"))
                 .andExpect(jsonPath("$.hobby").isEmpty())
                 .andExpect(jsonPath("$.address").isEmpty())
-                .andExpect(jsonPath("$.birthday.yearOfBirthday").value(1991))
-                .andExpect(jsonPath("$.birthday.monthOfBirthday").value(8))
-                .andExpect(jsonPath("$.birthday.dayOfBirthday").value(15))
                 .andExpect(jsonPath("$.phoneNumber").isEmpty())
                 .andExpect(jsonPath("$.deleted").value(false))
-                .andExpect(jsonPath("$.age").isNumber());
+                .andExpect(jsonPath("$.age").isNumber())
+                .andExpect(jsonPath("$.birthday").value("1991-08-15"));
     }
 
     @Test
     void postPerson() throws Exception {
 
+        PersonDto dto = PersonDto.of("martin","programming","대전",LocalDate.now(),"programmer","010-3925-1533");
+
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/person?name=martin2&age=20")
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content(
-                        "{\n" +
-                                "  \"name\":\"martin2\",\n" +
-                                "}"
-                    ))
+                    .content(toJasonString(dto)))
                 .andDo(print())
                 .andExpect(status().isCreated());
 
+        Person result = personRepository.findAll(Sort.by(Sort.Direction.DESC,"id")).get(0);
+
+        assertAll(
+                () -> assertThat(result.getName()).isEqualTo("martin"),
+                () -> assertThat(result.getHobby()).isEqualTo("programming"),
+                () -> assertThat(result.getAddress()).isEqualTo("대전"),
+                () -> assertThat(result.getBirthday()).isEqualTo(Birthday.of(LocalDate.now())),
+                () -> assertThat(result.getJob()).isEqualTo("programmer"),
+                () -> assertThat(result.getPhoneNumber()).isEqualTo("010-3925-1533")
+        );
     }
 
     @Test
