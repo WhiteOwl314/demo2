@@ -22,11 +22,7 @@ public class PersonService {
 
     @Transactional
     public Person getPerson(Long id){
-        Person person = personRepository.findById(id).orElse(null);
-
-        log.info("person: {}",person );
-
-        return person;
+       return personRepository.findById(id).orElse(null);
     }
 
     @Transactional
