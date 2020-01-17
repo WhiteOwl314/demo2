@@ -59,6 +59,18 @@ class PersonControllerTest {
     }
 
     @Test
+    void getAll() throws Exception{
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/person").param("page","1").param("size","2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPages").value(3))
+                .andExpect(jsonPath("$.totalElements").value(6))
+                .andExpect(jsonPath("$.numberOfElements").value(2))
+                .andExpect(jsonPath("$.content.[0].name").value("dennis"))
+                .andExpect(jsonPath("$.content.[1].name").value("sophia"));
+    }
+
+    @Test
     void getPerson() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/person/1"))
@@ -106,7 +118,7 @@ class PersonControllerTest {
                 .content(toJasonString(dto)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value(400))
-                .andExpect(jsonPath("$.message").value("이름은 필수값입니다.."));
+                .andExpect(jsonPath("$.message").value("이름은 필수값입니다."));
     }
 
     @Test
